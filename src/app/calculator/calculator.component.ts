@@ -61,8 +61,6 @@ export class CalculatorComponent {
 
     this.generateRiver(this.deck.deck, 5);
 
-    // TODO :
-
     console.log("Hand:" + hand.map(card => card.rank + " " + card.suit).join(', ') + "rank : " + this.evaluateHand(hand, this.river).handRank);
     console.log("highest card:" + this.evaluateHand(hand, this.river).highCard);
     console.log("HandSample:" + sampleHand.map(sample =>  sample.rank + " " + sample.suit).join(', ') + "rank : " + this.evaluateHand(sampleHand, this.river).handRank);
