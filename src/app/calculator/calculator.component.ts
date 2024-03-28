@@ -57,18 +57,16 @@ export class CalculatorComponent {
 
     let hand = [this.card_1, this.card_2];
 
-    this.generateRiver(this.deck.deck);
+    this.generateRiver(this.deck.deck, 5);
+
+    console.log("Hand:" + hand.map(card => card.rank + " " + card.suit).join(', '));
+    console.log("River:" + this.river.map(card => card.rank + card.suit).join(', '));
 
     let handWithRiver = hand.concat(this.river);
     handWithRiver.sort((a, b) => this.rankToNumber(a.rank) - this.rankToNumber(b.rank));
+    console.log("HandWithRiver:" + handWithRiver.map(card => card.rank + " " + card.suit).join(', '));
 
-    console.log(handWithRiver);
-
-    console.log(this.isRoyalFlush(handWithRiver));
-
-    let playerHands = this.generatePlayerHand(this.deck.deck);
-
-    console.log(playerHands);
+    console.log(this.evaluateHand(handWithRiver));
 
   }
 
@@ -90,10 +88,10 @@ export class CalculatorComponent {
     return playerHands;
   }
 
-  generateRiver(deck: CardComponent[]): void {
+  generateRiver(deck: CardComponent[], size: number): void {
     let river: CardComponent[] = [];
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < size; i++) {
       let randomIndex = Math.floor(Math.random() * deck.length);
       river.push(deck[randomIndex]);
       deck.splice(randomIndex, 1);
@@ -122,8 +120,7 @@ export class CalculatorComponent {
   }
   evaluateHand(hand: CardComponent[]): HandRank {
     // Triez les cartes par rang
-    let handWithRiver = hand.concat(this.river);
-    handWithRiver.sort((a, b) => this.rankToNumber(a.rank) - this.rankToNumber(b.rank));
+    hand.sort((a, b) => this.rankToNumber(a.rank) - this.rankToNumber(b.rank));
 
     // Vérifiez pour une Quinte Flush Royale
     if (this.isRoyalFlush(hand)) {
@@ -231,9 +228,15 @@ export class CalculatorComponent {
     if (hand.length < 5) {
       return false;
     } else {
-      // TODO: Implement this function
-      // Vérifiez si la main contient une suite de cinq cartes de la même couleur
-      return true;
+      let possibleCombinations = this.getCombinations(hand, 5);
+
+      for (let combination of possibleCombinations) {
+        if (this.isStraight(combination) && this.isFlush(combination)) {
+          return true;
+        }
+      }
+
+      return false;
     }
   }
 
@@ -243,7 +246,16 @@ export class CalculatorComponent {
     } else {
       // TODO: Implement this function
       // Vérifiez si la main contient quatre cartes du même rang
-      return true;
+      let possibleCombinations = this.getCombinations(hand, 4);
+
+      for (let combination of possibleCombinations) {
+        if (combination[0].rank === combination[1].rank &&
+          combination[0].rank === combination[2].rank &&
+          combination[0].rank === combination[3].rank) {
+          return true;
+        }
+      }
+      return false;
     }
   }
 
@@ -253,7 +265,38 @@ export class CalculatorComponent {
     } else {
       // TODO: Implement this function
       // Vérifiez si la main contient un brelan et une paire
-      return true;
+      let threeOfAKind;
+      let pair;
+      let possibleCombinations = this.getCombinations(hand, 3);
+
+
+
+      for (let combination of possibleCombinations) {
+        if (combination[0].rank === combination[1].rank &&
+          combination[0].rank === combination[2].rank) {
+          if (threeOfAKind == undefined || threeOfAKind < combination[0].rank) {
+            threeOfAKind = combination[0].rank;
+          }
+
+        }
+      }
+
+      if (threeOfAKind != undefined) {
+        let possibleCombinations2 = this.getCombinations(hand, 2);
+        for (let combination of possibleCombinations2) {
+          if (combination[0].rank === combination[1].rank) {
+            if (combination[0].rank != threeOfAKind) {
+              if (combination[0].rank !== threeOfAKind)
+                pair = combination[0].rank;
+            }
+          }
+        }
+      }
+
+      if (threeOfAKind != undefined && pair != undefined) {
+        return true;
+      }
+      return false;
     }
   }
 
@@ -262,8 +305,19 @@ export class CalculatorComponent {
       return false;
     } else {
       // TODO: Implement this function
-      // Vérifiez si la main contient cinq cartes de la même couleur
-      return true;
+      // Vérifiez si la main contient une suite de cinq cartes de la même couleur
+      let possibleCombinations = this.getCombinations(hand, 5);
+
+      // Vérifier si l'une des mains possible contient une quinte royale
+      for (let combination of possibleCombinations) {
+        if (combination[0].suit === combination[1].suit &&
+          combination[0].suit === combination[2].suit &&
+          combination[0].suit === combination[3].suit &&
+          combination[0].suit === combination[4].suit) {
+          return true;
+        }
+      }
+      return false;
     }
   }
 
@@ -273,7 +327,21 @@ export class CalculatorComponent {
     } else {
       // TODO: Implement this function
       // Vérifiez si la main contient une suite de cinq cartes
-      return true;
+      let sortedHand = [...hand].sort((a, b) => this.rankToNumber(a.rank) - this.rankToNumber(b.rank));
+      let straightCount = 1;
+
+      for (let i = 0; i < sortedHand.length - 1; i++) {
+        if (this.rankToNumber(sortedHand[i].rank) + 1 === this.rankToNumber(sortedHand[i + 1].rank)) {
+          straightCount++;
+          if (straightCount === 5) {
+            return true;
+          }
+        } else if (this.rankToNumber(sortedHand[i].rank) !== this.rankToNumber(sortedHand[i + 1].rank)) {
+          straightCount = 1;
+        }
+      }
+
+      return false;
     }
   }
 
@@ -283,7 +351,15 @@ export class CalculatorComponent {
     } else {
       // TODO: Implement this function
       // Vérifiez si la main contient trois cartes du même rang
-      return true;
+      let possibleCombinations = this.getCombinations(hand, 3);
+
+      for (let combination of possibleCombinations) {
+        if (combination[0].rank === combination[1].rank &&
+          combination[0].rank === combination[2].rank) {
+          return true;
+        }
+      }
+      return false;
     }
   }
 
@@ -293,7 +369,20 @@ export class CalculatorComponent {
     } else {
       // TODO: Implement this function
       // Vérifiez si la main contient deux paires de cartes
-      return true;
+      let possibleCombinations = this.getCombinations(hand, 2);
+      let pairs = 0;
+
+      for (let combination of possibleCombinations) {
+        if (combination[0].rank === combination[1].rank) {
+          pairs++;
+        }
+      }
+
+      if (pairs >= 2) {
+        return true;
+      }
+
+      return false;
     }
   }
 
@@ -303,7 +392,14 @@ export class CalculatorComponent {
     } else {
       // TODO: Implement this function
       // Vérifiez si la main contient une paire de cartes
-      return true;
+      let possibleCombinations = this.getCombinations(hand, 2);
+
+      for (let combination of possibleCombinations) {
+        if (combination[0].rank === combination[1].rank) {
+          return true;
+        }
+      }
+      return false;
     }
   }
 
