@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { CardComponent, Rank, Suit } from '../card/card.component';
-import { DeckComponent } from '../deck/deck.component';
+import {Component} from '@angular/core';
+import {CardComponent, Rank, Suit} from '../card/card.component';
+import {DeckComponent} from '../deck/deck.component';
 
 enum HandRank {
   HighCard,
@@ -25,8 +25,7 @@ export class CalculatorComponent {
   card_2!: CardComponent;
   deck: DeckComponent = new DeckComponent();
   river: CardComponent[] = [];
-
-  value: string = '';
+  rankString!: string;
 
   constructor() {
     this.dealCards();
@@ -65,7 +64,7 @@ export class CalculatorComponent {
     console.log("River:" + this.river.map(card => card.rank + card.suit).join(', '));
 
 
-    this.evaluateHand(hand, this.river);
+    this.rankString = HandRank[this.evaluateHand(hand, this.river).handRank];
 
   }
 
@@ -118,77 +117,68 @@ export class CalculatorComponent {
     }
   }
 
-  evaluateHand(hand: CardComponent[], river: CardComponent[]): HandRank {
+  evaluateHand(hand: CardComponent[], river: CardComponent[]): { handRank: HandRank, highCard: Rank } {
     // Triez les cartes par rang
     hand.sort((a, b) => this.rankToNumber(a.rank) - this.rankToNumber(b.rank));
 
     // Vérifiez pour une Quinte Flush Royale
-    if (this.isRoyalFlush(hand, river)) {
-
-      console.log("RoyalFlush");
-      return HandRank.RoyalFlush;
+    let royalFlush = this.isRoyalFlush(hand, river);
+    if (royalFlush !== null) {
+      return { handRank: HandRank.RoyalFlush, highCard: royalFlush };
     }
 
     // Vérifiez pour une Quinte Flush
-    if (this.isStraightFlush(hand, river)) {
-      console.log("StraightFlush");
-      this.value = 'StraightFlush';
-      return HandRank.StraightFlush;
+    let straightFlush = this.isStraightFlush(hand, river);
+    if (straightFlush !== null) {
+      return { handRank: HandRank.StraightFlush, highCard: straightFlush };
     }
 
     // Vérifiez pour un Carré
-    if (this.isFourOfAKind(hand, river)) {
-      console.log("FourOfAKind");
-      this.value = 'FourOfAKind';
-      return HandRank.FourOfAKind;
+    let fourOfAKind = this.isFourOfAKind(hand, river);
+    if (fourOfAKind !== null) {
+      return { handRank: HandRank.FourOfAKind, highCard: fourOfAKind };
     }
 
     // Vérifiez pour un Full House
-    if (this.isFullHouse(hand, river)) {
-      console.log("FullHouse");
-      this.value = 'FullHouse';
-      return HandRank.FullHouse;
+    let fullHouse = this.isFullHouse(hand, river);
+    if (fullHouse !== null) {
+      return { handRank: HandRank.FullHouse, highCard: fullHouse.threeOfAKind };
     }
 
     // Vérifiez pour une Couleur
-    if (this.isFlush(hand, river)) {
-      console.log("Flush");
-      this.value = 'Flush';
-      return HandRank.Flush;
+    let flush = this.isFlush(hand, river);
+    if (flush !== null) {
+      return { handRank: HandRank.Flush, highCard: flush };
     }
 
     // Vérifiez pour une Suite
-    if (this.isStraight(hand, river)) {
-      console.log("Straight");
-      this.value = 'Straight';
-      return HandRank.Straight;
+    let straight = this.isStraight(hand, river);
+    if (straight !== null) {
+      return { handRank: HandRank.Straight, highCard: straight };
     }
 
     // Vérifiez pour un Brelan
-    if (this.isThreeOfAKind(hand, river)) {
-      console.log("ThreeOfAKind");
-      this.value = 'ThreeOfAKind';
-      return HandRank.ThreeOfAKind;
+    let threeOfAKind = this.isThreeOfAKind(hand, river);
+    if (threeOfAKind !== null) {
+      return { handRank: HandRank.ThreeOfAKind, highCard: threeOfAKind };
     }
 
     // Vérifiez pour Deux Paires
-    if (this.isTwoPairs(hand, river)) {
-      console.log("TwoPairs");
-      this.value = 'TwoPairs';
-      return HandRank.TwoPairs;
+    let twoPairs = this.isTwoPairs(hand, river);
+    if (twoPairs !== null) {
+      return { handRank: HandRank.TwoPairs, highCard: twoPairs[0] };
     }
 
     // Vérifiez pour une Paire
-    if (this.isPair(hand, river)) {
-      console.log("Pair");
-      this.value = 'Pair';
-      return HandRank.Pair;
+    let pair = this.isPair(hand, river);
+    if (pair !== null) {
+      return { handRank: HandRank.Pair, highCard: pair };
     }
 
     // Si aucune des combinaisons ci-dessus n'est trouvée, retournez Carte Haute
-    console.log("HighCard");
-    this.value = 'HighCard';
-    return HandRank.HighCard;
+    hand.sort((a, b) => this.rankToNumber(a.rank) - this.rankToNumber(b.rank));
+    let highCard = hand[hand.length - 1].rank;
+    return { handRank: HandRank.HighCard, highCard: highCard };
   }
 
   getCombinations(cards: CardComponent[], combinationSize: number, startIndex = 0): CardComponent[][] {
@@ -217,10 +207,10 @@ export class CalculatorComponent {
     return selectedCards.includes(hand[0]) && selectedCards.includes(hand[1]);
   }
 
-  isRoyalFlush(hand: CardComponent[], river: CardComponent[]): boolean {
+  isRoyalFlush(hand: CardComponent[], river: CardComponent[]): Rank | null {
     let handWithRiver = hand.concat(river);
     if (handWithRiver.length < 5) {
-      return false;
+      return null;
     } else {
       // TODO: Implement this function
       // Vérifiez si la main contient un 10, un Valet, une Reine, un Roi et un As de la même couleur
@@ -240,7 +230,7 @@ export class CalculatorComponent {
             combination[0].suit === combination[3].suit &&
             combination[0].suit === combination[4].suit) {
             if (this.containsHandCards(combination, hand)) {
-              return true;
+              return Rank.Ace;
             }
 
           }
@@ -248,31 +238,33 @@ export class CalculatorComponent {
         }
 
       }
-      return false;
+      return null;
     }
   }
 
-  isStraightFlush(hand: CardComponent[], river: CardComponent[]): boolean {
+  isStraightFlush(hand: CardComponent[], river: CardComponent[]): Rank | null {
     let handWithRiver = hand.concat(river);
     if (handWithRiver.length < 5) {
-      return false;
+      return null;
     } else {
       let possibleCombinations = this.getCombinations(handWithRiver, 5);
 
       for (let combination of possibleCombinations) {
         if (this.isStraight(hand, combination) && this.isFlush(hand, combination)) {
-          return true;
+          combination.sort((a, b) => this.rankToNumber(a.rank) - this.rankToNumber(b.rank));
+          let highestCard = combination[combination.length - 1]; // Prend le dernier élément, qui est la carte de rang le plus élevé
+          return highestCard.rank;
         }
       }
 
-      return false;
+      return null;
     }
   }
 
-  isFourOfAKind(hand: CardComponent[], river: CardComponent[]): boolean {
+  isFourOfAKind(hand: CardComponent[], river: CardComponent[]): Rank | null {
     let handWithRiver = hand.concat(river);
     if (handWithRiver.length < 4) {
-      return false;
+      return null;
     } else {
       // TODO: Implement this function
       // Vérifiez si la main contient quatre cartes du même rang
@@ -282,104 +274,98 @@ export class CalculatorComponent {
         if (combination[0].rank === combination[1].rank &&
           combination[0].rank === combination[2].rank &&
           combination[0].rank === combination[3].rank) {
-          if (this.containsHandCards(combination, hand)) {
-            return true;
+          if (this.containsHandCards(combination, [this.card_1]) || this.containsHandCards(combination, [this.card_2])) {
+            return combination[0].rank;
           }
         }
       }
-      return false;
+      return null;
     }
   }
 
-  isFullHouse(hand: CardComponent[], river: CardComponent[]): boolean {
+  isFullHouse(hand: CardComponent[], river: CardComponent[]): { threeOfAKind: Rank, pair: Rank } | null {
     let handWithRiver = hand.concat(river);
+    let foundThreeOfAKindsRank: Rank[] = [];
+    let foundPairsRank: Rank[] = [];
+
+    let foundThreeOfAKinds: CardComponent[][] = [];
+    let foundPairs: CardComponent[][] = [];
+
     if (handWithRiver.length < 5) {
-      return false;
+      return null;
     } else {
-      // TODO: Implement this function
-      // Vérifiez si la main contient un brelan et une paire
-      let threeOfAKind;
-      let pair;
+      let possibleCombinationsForThree = this.getCombinations(handWithRiver, 3);
+      let possibleCombinationsForTwo = this.getCombinations(handWithRiver, 2);
 
-      let handCardsInThree = 0;
-      let handCardsInPair = 0;
-
-
-      let possibleCombinations = this.getCombinations(handWithRiver, 3);
-      for (let combination of possibleCombinations) {
-        if (combination[0].rank === combination[1].rank &&
-          combination[0].rank === combination[2].rank) {
-          if (threeOfAKind == undefined || threeOfAKind < combination[0].rank) {
-            threeOfAKind = combination[0].rank;
-            if (combination.includes(hand[0]) && combination.includes(hand[1])) {
-              handCardsInThree = 2;
-            }
-            else if (combination.includes(hand[1]) || combination.includes(hand[0])) {
-              handCardsInThree = 1;
-            }
-          }
-
+      for (let combination of possibleCombinationsForThree) {
+        if (combination[0].rank === combination[1].rank && combination[0].rank === combination[2].rank) {
+          foundThreeOfAKindsRank.push(combination[0].rank);
+          foundThreeOfAKinds.push(combination);
         }
       }
 
-      if (threeOfAKind != undefined) {
-        let possibleCombinations2 = this.getCombinations(handWithRiver, 2);
-        for (let combination of possibleCombinations2) {
-          if (combination[0].rank === combination[1].rank) {
-            if (combination[0].rank != threeOfAKind) {
-              if (combination[0].rank !== threeOfAKind)
-                if (pair == undefined || pair < combination[0].rank) {
-                  pair = combination[0].rank;
-                  if (combination.includes(hand[0]) && combination.includes(hand[1])) {
-                    handCardsInPair = 2;
-                  } else if (combination.includes(hand[1]) || combination.includes(hand[0])) {
-                    handCardsInPair = 1;
-                  }
-                }
-
-
-
-            }
-          }
+      for (let combination of possibleCombinationsForTwo) {
+        if (combination[0].rank === combination[1].rank) {
+          foundPairsRank.push(combination[0].rank);
+          foundPairs.push(combination);
         }
       }
 
-      if (threeOfAKind != undefined && pair != undefined && handCardsInThree + handCardsInPair == 2) {
-        return true;
+      // Si un brelan et une paire sont trouvés, vérifiez si les cartes de la main sont incluses dans la combinaison
+
+
+      if (foundThreeOfAKinds.length >= 1 && foundPairs.length >= 1) {
+        foundThreeOfAKinds.sort((a, b) => this.rankToNumber(a[0].rank) - this.rankToNumber(b[0].rank));
+        foundPairs.sort((a, b) => this.rankToNumber(a[0].rank) - this.rankToNumber(b[0].rank));
+
+        for (let i= foundPairs.length-1; i>=0; i--) {
+          for (let j=foundThreeOfAKinds.length-1; j>=0; j--) {
+            let combination = foundPairs[i].concat(foundThreeOfAKinds[j]);
+            if (this.containsHandCards(combination, hand)) {
+              return {threeOfAKind: foundThreeOfAKindsRank[j], pair: foundPairsRank[i]};
+            }
+          }
+        }
+
       }
-      return false;
+
+      return null;
     }
   }
 
-  isFlush(hand: CardComponent[], river: CardComponent[]): boolean {
+  isFlush(hand: CardComponent[], river: CardComponent[]): Rank | null {
     let handWithRiver = hand.concat(river);
+    let foundFlush: CardComponent[] = [];
+
     if (handWithRiver.length < 5) {
-      return false;
+      return null;
     } else {
-      // TODO: Implement this function
-      // Vérifiez si la main contient une suite de cinq cartes de la même couleur
-      let possibleCombinations = this.getCombinations(handWithRiver, 5);
+      let suits = Object.values(Suit);
 
-      // Vérifier si l'une des mains possible contient une quinte royale
-      for (let combination of possibleCombinations) {
-        if (combination[0].suit === combination[1].suit &&
-          combination[0].suit === combination[2].suit &&
-          combination[0].suit === combination[3].suit &&
-          combination[0].suit === combination[4].suit) {
-          if (this.containsHandCards(combination, hand)) {
-            return true;
+      for (let suit of suits) {
+        let sameSuitCards = handWithRiver.filter(card => card.suit === suit);
+        if (sameSuitCards.length >= 5) {
+          if (this.containsHandCards(sameSuitCards, hand)) {
+            sameSuitCards.sort((a, b) => this.rankToNumber(a.rank) - this.rankToNumber(b.rank));
+            foundFlush = sameSuitCards;
           }
 
         }
       }
-      return false;
+
+      if (foundFlush.length >= 5) {
+        let highestCard = foundFlush[foundFlush.length - 1]; // Prend le dernier élément, qui est la carte de rang le plus élevé
+        return highestCard.rank;
+      }
+
+      return null;
     }
   }
 
-  isStraight(hand: CardComponent[], river: CardComponent[]): boolean {
+  isStraight(hand: CardComponent[], river: CardComponent[]): Rank | null {
     let handWithRiver = hand.concat(river);
     if (handWithRiver.length < 5) {
-      return false;
+      return null;
     } else {
       // TODO: Implement this function
       // Vérifiez si la main contient une suite de cinq cartes
@@ -391,8 +377,8 @@ export class CalculatorComponent {
           straightCount++;
           if (straightCount === 5) {
             // vérifier si les 5 cartes séléctionnée contienne les cartes de la main
-            if (this.containsHandCards(sortedHand.slice(i - 4, i + 1), hand)) {
-              return true;
+            if (this.containsHandCards(sortedHand.slice(i - 3, i + 2), hand)) {
+              return sortedHand[i + 1].rank;
             }
           }
         } else if (this.rankToNumber(sortedHand[i].rank) !== this.rankToNumber(sortedHand[i + 1].rank)) {
@@ -400,72 +386,87 @@ export class CalculatorComponent {
         }
       }
 
-      return false;
+      return null;
     }
   }
 
-  isThreeOfAKind(hand: CardComponent[], river: CardComponent[]): boolean {
+  isThreeOfAKind(hand: CardComponent[], river: CardComponent[]): Rank | null {
     let handWithRiver = hand.concat(river);
+    let foundThreeOfAKinds: Rank[] = [];
+
     if (handWithRiver.length < 3) {
-      return false;
+      return null;
     } else {
-      // TODO: Implement this function
-      // Vérifiez si la main contient trois cartes du même rang
       let possibleCombinations = this.getCombinations(handWithRiver, 3);
 
       for (let combination of possibleCombinations) {
         if (combination[0].rank === combination[1].rank &&
           combination[0].rank === combination[2].rank) {
-          return true;
+          foundThreeOfAKinds.push(combination[0].rank);
         }
       }
-      return false;
+
+      if (foundThreeOfAKinds.length >= 1) {
+        foundThreeOfAKinds.sort((a, b) => this.rankToNumber(a) - this.rankToNumber(b));
+        let bestThreeOfAKind = foundThreeOfAKinds[foundThreeOfAKinds.length - 1]; // Prend le dernier élément, qui est le brelan de rang le plus élevé
+        return bestThreeOfAKind;
+      }
+
+      return null;
     }
   }
 
-  isTwoPairs(hand: CardComponent[], river: CardComponent[]): boolean {
+  isTwoPairs(hand: CardComponent[], river: CardComponent[]): Rank[] | null {
     let handWithRiver = hand.concat(river);
     let containsHandCard = false;
+    let foundPairs: Rank[] = [];
+
     if (handWithRiver.length < 4) {
-      return false;
+      return null;
     } else {
-      // TODO: Implement this function
-      // Vérifiez si la main contient deux paires de cartes
       let possibleCombinations = this.getCombinations(handWithRiver, 2);
-      let pairs = 0;
 
       for (let combination of possibleCombinations) {
         if (combination[0].rank === combination[1].rank) {
-          pairs++;
+          foundPairs.push(combination[0].rank);
           if (this.containsHandCards(combination, hand)) {
             containsHandCard = true;
           }
         }
       }
 
-      if (pairs >= 2 && containsHandCard) {
-        return true;
+      if (foundPairs.length >= 2) {
+        foundPairs.sort((a, b) => this.rankToNumber(a) - this.rankToNumber(b));
+        let bestPairs = foundPairs.slice(-2); // Prend les deux derniers éléments, qui sont les paires de rang le plus élevé
+        return bestPairs;
       }
 
-      return false;
+      return null;
     }
   }
 
-  isPair(hand: CardComponent[], river: CardComponent[]): boolean {
+  isPair(hand: CardComponent[], river: CardComponent[]): Rank | null {
     let handWithRiver = hand.concat(river);
+    let foundPairs: Rank[] = [];
+
     if (handWithRiver.length < 2) {
-      return false;
+      return null;
     } else {
-      // TODO: Implement this function
-      // Vérifiez si la main contient une paire de cartes
       let possibleCombinations = this.getCombinations(handWithRiver, 2);
 
       for (let combination of possibleCombinations) {
         if (combination[0].rank === combination[1].rank) {
-          return true;
+          foundPairs.push(combination[0].rank);
         }
       }
-      return false;
+
+      if (foundPairs.length >= 1) {
+        foundPairs.sort((a, b) => this.rankToNumber(a) - this.rankToNumber(b));
+        let bestPair = foundPairs[foundPairs.length - 1]; // Prend le dernier élément, qui est la paire de rang le plus élevé
+        return bestPair;
+      }
+
+      return null;
     }
   }
 
