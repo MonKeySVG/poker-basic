@@ -1,1 +1,6 @@
-<p>calculator works!</p>
+<h1>Hand : {{card_1.rank}} {{card_1.suit}} - {{card_2.rank}} {{card_2.suit}}</h1>
+
+<h1>River :</h1>
+<div *ngFor="let card of river">
+  <h1>{{card.rank}} {{card.suit}}</h1>
+</div>

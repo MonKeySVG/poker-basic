@@ -26,6 +26,8 @@ export class CalculatorComponent {
   deck: DeckComponent = new DeckComponent();
   river: CardComponent[] = [];
 
+  value: string = '';
+
   constructor() {
     this.dealCards();
     this.calculatePreFlopOdds(3);
@@ -124,50 +126,69 @@ export class CalculatorComponent {
 
     // Vérifiez pour une Quinte Flush Royale
     if (this.isRoyalFlush(hand)) {
+      console.log("RoyalFlush");
       return HandRank.RoyalFlush;
     }
 
     // Vérifiez pour une Quinte Flush
     if (this.isStraightFlush(hand)) {
+      console.log("StraightFlush");
+      this.value = 'StraightFlush';
       return HandRank.StraightFlush;
     }
 
     // Vérifiez pour un Carré
     if (this.isFourOfAKind(hand)) {
+      console.log("FourOfAKind");
+      this.value = 'FourOfAKind';
       return HandRank.FourOfAKind;
     }
 
     // Vérifiez pour un Full House
     if (this.isFullHouse(hand)) {
+      console.log("FullHouse");
+      this.value = 'FullHouse';
       return HandRank.FullHouse;
     }
 
     // Vérifiez pour une Couleur
     if (this.isFlush(hand)) {
+      console.log("Flush");
+      this.value = 'Flush';
       return HandRank.Flush;
     }
 
     // Vérifiez pour une Suite
     if (this.isStraight(hand)) {
+      console.log("Straight");
+      this.value = 'Straight';
       return HandRank.Straight;
     }
 
     // Vérifiez pour un Brelan
     if (this.isThreeOfAKind(hand)) {
+      console.log("ThreeOfAKind");
+      this.value = 'ThreeOfAKind';
       return HandRank.ThreeOfAKind;
     }
 
     // Vérifiez pour Deux Paires
     if (this.isTwoPairs(hand)) {
+      console.log("TwoPairs");
+      this.value = 'TwoPairs';
       return HandRank.TwoPairs;
     }
 
     // Vérifiez pour une Paire
     if (this.isPair(hand)) {
+      console.log("Pair");
+      this.value = 'Pair';
       return HandRank.Pair;
     }
 
     // Si aucune des combinaisons ci-dessus n'est trouvée, retournez Carte Haute
+    console.log("HighCard");
+    this.value = 'HighCard';
     return HandRank.HighCard;
   }
 
