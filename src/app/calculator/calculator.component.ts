@@ -38,15 +38,19 @@ export class CalculatorComponent {
     // 4. Count how many times each type of hand appears for each player
     // 5. The pre-flop odds for each type of hand for each player is the number of times that hand appears divided by the total number of combinations
 
-    let deckMinusHole = this.deck.deck.filter(card =>
-      !(card.rank === this.card_1.rank && card.suit === this.card_1.suit) &&
-      !(card.rank === this.card_2.rank && card.suit === this.card_2.suit)
-    );
+    let deckMinusHole = this.filterDeck(this.deck.deck, this.card_1);
+    deckMinusHole = this.filterDeck(deckMinusHole, this.card_2);
 
     let playerHands = this.generatePlayerHands(numberOfPlayers, deckMinusHole);
     console.log(deckMinusHole);
     console.log(playerHands);
 
+  }
+
+  filterDeck(deck: CardComponent[], card: CardComponent): CardComponent[] {
+    return deck.filter(deckCard =>
+      !(deckCard.rank === card.rank && deckCard.suit === card.suit)
+    );
   }
 
   generatePlayerHands(numberOfPlayers: number, deck: CardComponent[]): CardComponent[][][] {
