@@ -57,12 +57,20 @@ export class CalculatorComponent {
 
 
     let hand = [this.card_1, this.card_2];
+    let sampleHand = [this.getRandomCard(), this.getRandomCard()];
 
     this.generateRiver(this.deck.deck, 5);
 
-    console.log("Hand:" + hand.map(card => card.rank + " " + card.suit).join(', '));
+    // TODO :
+
+    console.log("Hand:" + hand.map(card => card.rank + " " + card.suit).join(', ') + "rank : " + this.evaluateHand(hand, this.river).handRank);
+    console.log("highest card:" + this.evaluateHand(hand, this.river).highCard);
+    console.log("HandSample:" + sampleHand.map(sample =>  sample.rank + " " + sample.suit).join(', ') + "rank : " + this.evaluateHand(sampleHand, this.river).handRank);
+    console.log("highest card:" + this.evaluateHand(sampleHand, this.river).highCard);
+
     console.log("River:" + this.river.map(card => card.rank + card.suit).join(', '));
 
+    console.log("is hand > sampleHand ?" + this.isHandBetter(hand, sampleHand));
 
     this.rankString = HandRank[this.evaluateHand(hand, this.river).handRank];
 
@@ -306,8 +314,11 @@ export class CalculatorComponent {
 
       for (let combination of possibleCombinationsForTwo) {
         if (combination[0].rank === combination[1].rank) {
-          foundPairsRank.push(combination[0].rank);
-          foundPairs.push(combination);
+          if (combination[0].rank !== foundThreeOfAKindsRank[0]) {
+            foundPairsRank.push(combination[0].rank);
+            foundPairs.push(combination);
+          }
+
         }
       }
 
@@ -429,7 +440,7 @@ export class CalculatorComponent {
       for (let combination of possibleCombinations) {
         if (combination[0].rank === combination[1].rank) {
           foundPairs.push(combination[0].rank);
-          if (this.containsHandCards(combination, hand)) {
+          if (this.containsHandCards(combination, [hand[0]]) || this.containsHandCards(combination, [hand[1]])) {
             containsHandCard = true;
           }
         }
@@ -471,12 +482,23 @@ export class CalculatorComponent {
   }
 
 
-  // isHandBetter(hand1: CardComponent[], hand2: CardComponent[]): boolean {
-  //   let rank1 = this.evaluateHand(hand1);
-  //   let rank2 = this.evaluateHand(hand2);
-  //
-  //   return rank1 > rank2;
-  // }
+  isHandBetter(hand1: CardComponent[], hand2: CardComponent[]): boolean {
+    let rank1 = this.evaluateHand(hand1, this.river);
+    let rank2 = this.evaluateHand(hand2, this.river);
+
+    let highestCardHand1 = Math.max(...hand1.map(card => this.rankToNumber(card.rank)));
+    let highestCardHand2 = Math.max(...hand2.map(card => this.rankToNumber(card.rank)));
+
+    if (rank1.handRank == rank2.handRank) {
+      if ( rank1.highCard > rank2.highCard) {
+        return highestCardHand1 > highestCardHand2;
+
+      }
+      return rank1.highCard > rank2.highCard;
+    } else {
+      return rank1.handRank > rank2.handRank;
+    }
+  }
 
 
 
