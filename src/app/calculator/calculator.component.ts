@@ -60,11 +60,11 @@ export class CalculatorComponent {
     this.generateRiver(this.deck.deck);
 
     let handWithRiver = hand.concat(this.river);
+    handWithRiver.sort((a, b) => this.rankToNumber(a.rank) - this.rankToNumber(b.rank));
 
     console.log(handWithRiver);
 
-    let possibleCombinations = this.getCombinations(handWithRiver, 3);
-    console.log(possibleCombinations);
+    console.log(this.isRoyalFlush(handWithRiver));
 
     let playerHands = this.generatePlayerHand(this.deck.deck);
 
@@ -202,16 +202,28 @@ export class CalculatorComponent {
     } else {
       // TODO: Implement this function
       // Vérifiez si la main contient un 10, un Valet, une Reine, un Roi et un As de la même couleur
+      let possibleCombinations = this.getCombinations(hand, 5);
 
+      // Vérifier si l'une des mains possible contient une quinte royale
+      for (let combination of possibleCombinations) {
 
+        if (combination[0].rank === Rank.Ten &&
+          combination[1].rank === Rank.Jack &&
+          combination[2].rank === Rank.Queen &&
+          combination[3].rank === Rank.King &&
+          combination[4].rank === Rank.Ace) {
 
+          if (combination[0].suit === combination[1].suit &&
+            combination[0].suit === combination[2].suit &&
+            combination[0].suit === combination[3].suit &&
+            combination[0].suit === combination[4].suit) {
+            return true;
+          }
 
+        }
 
-
-
-
-
-      return true;
+      }
+      return false;
     }
   }
 
