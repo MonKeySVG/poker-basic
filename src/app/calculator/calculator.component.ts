@@ -27,7 +27,9 @@ export class CalculatorComponent {
 
   dealCards(): void {
     this.card_1 = this.getRandomCard();
+    this.deck.deck = this.filterDeck(this.deck.deck, this.card_1);
     this.card_2 = this.getRandomCard();
+    this.deck.deck = this.filterDeck(this.deck.deck, this.card_2);
   }
 
   calculatePreFlopOdds(numberOfPlayers: number): void {
@@ -38,11 +40,10 @@ export class CalculatorComponent {
     // 4. Count how many times each type of hand appears for each player
     // 5. The pre-flop odds for each type of hand for each player is the number of times that hand appears divided by the total number of combinations
 
-    let deckMinusHole = this.filterDeck(this.deck.deck, this.card_1);
-    deckMinusHole = this.filterDeck(deckMinusHole, this.card_2);
 
-    let playerHands = this.generatePlayerHands(numberOfPlayers, deckMinusHole);
-    console.log(deckMinusHole);
+
+    let playerHands = this.generatePlayerHands(numberOfPlayers, this.deck.deck);
+
     console.log(playerHands);
 
   }
@@ -67,4 +68,8 @@ export class CalculatorComponent {
 
     return playerHands;
   }
+
+
+
+
 }
