@@ -42,7 +42,7 @@ export class CalculatorComponent {
 
 
 
-    let playerHands = this.generatePlayerHands(numberOfPlayers, this.deck.deck);
+    let playerHands = this.generatePlayerHand(this.deck.deck);
 
     console.log(playerHands);
 
@@ -54,19 +54,28 @@ export class CalculatorComponent {
     );
   }
 
-  generatePlayerHands(numberOfPlayers: number, deck: CardComponent[]): CardComponent[][][] {
-    let playerHands: CardComponent[][][] = [];
+  generatePlayerHand(deck: CardComponent[]): CardComponent[][] {
+    let playerHands: CardComponent[][] = [];
 
-    for (let i = 0; i < numberOfPlayers; i++) {
-      playerHands[i] = [];
-      for (let j = 0; j < deck.length; j++) {
-        for (let k = j + 1; k < deck.length; k++) {
-          playerHands[i].push([deck[j], deck[k]]);
-        }
+    for (let j = 0; j < deck.length; j++) {
+      for (let k = j + 1; k < deck.length; k++) {
+        playerHands.push([deck[j], deck[k]]);
       }
     }
 
     return playerHands;
+  }
+
+  generateRiver(deck: CardComponent[]): CardComponent[] {
+    let river: CardComponent[] = [];
+
+    for (let i = 0; i < 3; i++) {
+      let randomIndex = Math.floor(Math.random() * deck.length);
+      river.push(deck[randomIndex]);
+      deck.splice(randomIndex, 1);
+    }
+
+    return river;
   }
 
 
