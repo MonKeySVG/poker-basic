@@ -1,6 +1,21 @@
-<h1>Hand : {{card_1.rank}} {{card_1.suit}} - {{card_2.rank}} {{card_2.suit}}</h1>
 
-<h1>River :</h1>
-<div *ngFor="let card of river">
-  <h1>{{card.rank}} {{card.suit}}</h1>
+
+<div class="container">
+  <div class="hand">
+    <h1>Hand :</h1>
+    <p> {{card_1.rank}} {{card_1.suit}} - {{card_2.rank}} {{card_2.suit}}</p>
+  </div>
+
+  <div class="river">
+    <h1>River :</h1>
+    <div *ngFor="let card of river">
+      <p>{{card.rank}} {{card.suit}}</p>
+    </div>
+  </div>
+
+  <div class="best-combination">
+    <h1>Best combination :</h1>
+    <p> {{value}}</p>
+  </div>
 </div>
+
