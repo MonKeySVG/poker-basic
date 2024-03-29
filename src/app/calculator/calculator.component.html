@@ -2,14 +2,15 @@
 
 <div class="container">
   <div class="hand">
-    <h1>Hand :</h1>
-    <p> {{card_1.rank}} {{card_1.suit}} - {{card_2.rank}} {{card_2.suit}}</p>
+    <div *ngFor="let card of hand">
+      <app-card-on-screen [rank]="card.rank" [suit]="card.suit"></app-card-on-screen>
+    </div>
   </div>
 
+
   <div class="river">
-    <h1>River :</h1>
     <div *ngFor="let card of river">
-      <p>{{card.rank}} {{card.suit}}</p>
+      <app-card-on-screen [rank]="card.rank" [suit]="card.suit"></app-card-on-screen>
     </div>
   </div>
 
@@ -18,4 +19,5 @@
     <p>{{rankString}}</p>
   </div>
 </div>
+
 

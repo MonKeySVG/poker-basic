@@ -23,6 +23,7 @@ enum HandRank {
 export class CalculatorComponent {
   card_1!: CardComponent;
   card_2!: CardComponent;
+  hand: CardComponent[] = [];
   deck: DeckComponent = new DeckComponent();
   river: CardComponent[] = [];
   rankString!: string;
@@ -56,21 +57,13 @@ export class CalculatorComponent {
     // 5. The pre-flop odds for each type of hand for each player is the number of times that hand appears divided by the total number of combinations
 
 
-    let hand = [this.card_1, this.card_2];
+    this.hand = [this.card_1, this.card_2];
     let sampleHand = [this.getRandomCard(), this.getRandomCard()];
 
     this.generateRiver(this.deck.deck, 5);
 
-    console.log("Hand:" + hand.map(card => card.rank + " " + card.suit).join(', ') + "rank : " + this.evaluateHand(hand, this.river).handRank);
-    console.log("highest card:" + this.evaluateHand(hand, this.river).highCard);
-    console.log("HandSample:" + sampleHand.map(sample =>  sample.rank + " " + sample.suit).join(', ') + "rank : " + this.evaluateHand(sampleHand, this.river).handRank);
-    console.log("highest card:" + this.evaluateHand(sampleHand, this.river).highCard);
 
-    console.log("River:" + this.river.map(card => card.rank + card.suit).join(', '));
-
-    console.log("is hand > sampleHand ?" + this.isHandBetter(hand, sampleHand));
-
-    this.rankString = HandRank[this.evaluateHand(hand, this.river).handRank];
+    this.rankString = HandRank[this.evaluateHand(this.hand, this.river).handRank];
 
   }
 
