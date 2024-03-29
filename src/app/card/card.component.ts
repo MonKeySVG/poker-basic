@@ -17,10 +17,10 @@ export enum Rank {
 }
 
 export enum Suit {
-  Hearts = 'Hearts',
-  Diamonds = 'Diamonds',
-  Clubs = 'Clubs',
-  Spades = 'Spades'
+  Hearts = '♥',
+  Diamonds = '♦',
+  Clubs = '♣',
+  Spades = '♠'
 }
 @Component({
   selector: 'app-card',
