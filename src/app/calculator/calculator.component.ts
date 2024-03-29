@@ -156,6 +156,27 @@ export class CalculatorComponent {
     return this.getCombinations(deck, size);
   }
 
+  handStrendth(ourCards: CardComponent[], boardCards: CardComponent[], numberOfPlayers: number): string {
+    let ahead = 0;
+    let tied = 0;
+    let behind = 0;
+
+    this.generatePlayerHand(this.deck.deck).forEach(opponentHand => {
+      if (this.isHandBetter(ourCards, opponentHand) == 1) {
+        ahead++;
+      } else if (this.isHandBetter(ourCards, opponentHand) == 0) {
+        tied++;
+      } else {
+        behind++;
+      }
+    });
+
+    let odds = (ahead + tied / 2) / (ahead + tied + behind);
+    let oddsPowerPlayers = Math.pow(odds, numberOfPlayers);
+
+    return (oddsPowerPlayers).toFixed(2);
+  }
+
   calculatePreFlopOdds(numberOfPlayers: number): void {
     // TODO: Implement this function
     // 1. Generate all possible combinations of 2-card hands for the specified number of players
@@ -625,21 +646,21 @@ export class CalculatorComponent {
   }
 
 
-  isHandBetter(hand1: CardComponent[], hand2: CardComponent[]): boolean {
+  isHandBetter(hand1: CardComponent[], hand2: CardComponent[]): number {
     let rank1 = this.evaluateHand(hand1, this.river);
     let rank2 = this.evaluateHand(hand2, this.river);
 
     let highestCardHand1 = Math.max(...hand1.map(card => this.rankToNumber(card.rank)));
     let highestCardHand2 = Math.max(...hand2.map(card => this.rankToNumber(card.rank)));
 
-    if (rank1.handRank == rank2.handRank) {
-      if ( rank1.highCard > rank2.highCard) {
-        return highestCardHand1 > highestCardHand2;
-
+    if (rank1.handRank === rank2.handRank) {
+      if (rank1.highCard === rank2.highCard) {
+        return 0; // Les mains sont égales
+      } else {
+        return rank1.highCard > rank2.highCard ? 1 : -1; // Compare les cartes hautes
       }
-      return rank1.highCard > rank2.highCard;
     } else {
-      return rank1.handRank > rank2.handRank;
+      return rank1.handRank > rank2.handRank ? 1 : -1; // Compare les rangs des mains
     }
   }
 
