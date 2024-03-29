@@ -73,7 +73,6 @@ export class CalculatorComponent {
       this.dealCards();
     }
     this.rankString = HandRank[this.evaluateHand(this.hand, this.river).handRank];
-
   }
 
   flop(): void {
@@ -152,6 +151,11 @@ export class CalculatorComponent {
     this.rankString = HandRank[this.evaluateHand(this.hand, this.river).handRank];
   }
 
+  generatePossibleRivers(deck: CardComponent[]): CardComponent[][] {
+    let size = 5 - this.river.length;
+    return this.getCombinations(deck, size);
+  }
+
   calculatePreFlopOdds(numberOfPlayers: number): void {
     // TODO: Implement this function
     // 1. Generate all possible combinations of 2-card hands for the specified number of players
@@ -159,6 +163,27 @@ export class CalculatorComponent {
     // 3. For each combination of player hands and community cards, determine the best poker hand each player can get
     // 4. Count how many times each type of hand appears for each player
     // 5. The pre-flop odds for each type of hand for each player is the number of times that hand appears divided by the total number of combinations
+
+    let playerHands = this.generatePlayerHand(this.deck.deck);
+    let possibleRivers = this.generatePossibleRivers(this.deck.deck);
+
+    let wins = 0;
+    let losses = 0;
+
+    for (let playerHand of playerHands) {
+      for (let river of possibleRivers) {
+        if (river.includes(playerHand[0]) || river.includes(playerHand[1])) {
+          if (this.isHandBetter(this.hand, playerHand)) {
+            wins++;
+          } else {
+            losses++;
+          }
+        }
+      }
+    }
+
+    let odds = wins / (wins + losses);
+    console.log('Pre-flop odds:', odds);
 
   }
 
