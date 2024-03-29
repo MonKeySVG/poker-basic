@@ -29,8 +29,7 @@ export class CalculatorComponent {
   rankString!: string;
 
   constructor() {
-    this.dealCards();
-    this.calculatePreFlopOdds(3);
+    this.RandomHandAndRiver();
   }
 
   getRandomCard(): CardComponent {
@@ -48,6 +47,16 @@ export class CalculatorComponent {
     this.deck.deck = this.filterDeck(this.deck.deck, this.card_2);
   }
 
+  RandomHandAndRiver(): void {
+    this.deck = new DeckComponent();
+    this.dealCards();
+    this.hand = [this.card_1, this.card_2];
+
+    this.generateRiver(this.deck.deck, 5);
+
+    this.rankString = HandRank[this.evaluateHand(this.hand, this.river).handRank];
+  }
+
   calculatePreFlopOdds(numberOfPlayers: number): void {
     // TODO: Implement this function
     // 1. Generate all possible combinations of 2-card hands for the specified number of players
@@ -55,16 +64,6 @@ export class CalculatorComponent {
     // 3. For each combination of player hands and community cards, determine the best poker hand each player can get
     // 4. Count how many times each type of hand appears for each player
     // 5. The pre-flop odds for each type of hand for each player is the number of times that hand appears divided by the total number of combinations
-
-
-    this.hand = [this.card_1, this.card_2];
-    let sampleHand = [this.getRandomCard(), this.getRandomCard()];
-
-    this.generateRiver(this.deck.deck, 5);
-
-
-
-    this.rankString = HandRank[this.evaluateHand(this.hand, this.river).handRank];
 
   }
 

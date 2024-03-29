@@ -1,23 +1,47 @@
-
-
 <div class="container">
-  <div class="hand">
-    <div *ngFor="let card of hand">
-      <app-card-on-screen [rank]="card.rank" [suit]="card.suit"></app-card-on-screen>
+
+  <div class="left-container">
+    <header>
+      <h1>Poker Stats</h1>
+    </header>
+
+    <div class="infos">
+
     </div>
+
+    <div class="actions">
+      <div class="block">
+        <button (click)="RandomHandAndRiver()">Random Hand and River</button>
+
+      </div>
+    </div>
+
+
   </div>
 
 
-  <div class="river">
-    <div *ngFor="let card of river">
-      <app-card-on-screen [rank]="card.rank" [suit]="card.suit"></app-card-on-screen>
-    </div>
-  </div>
 
-  <div class="best-combination">
-    <h1>Best combination :</h1>
-    <p>{{rankString}}</p>
+  <div class="right-container">
+    <div class="hand">
+      <div *ngFor="let card of hand">
+        <app-card-on-screen [rank]="card.rank" [suit]="card.suit"></app-card-on-screen>
+      </div>
+    </div>
+
+
+    <div class="river">
+      <div *ngFor="let card of river">
+        <app-card-on-screen [rank]="card.rank" [suit]="card.suit"></app-card-on-screen>
+      </div>
+    </div>
+
+    <div class="best-combination">
+      <h1>Best combination :</h1>
+      <p>{{rankString}}</p>
+    </div>
   </div>
 </div>
+
+
 
 
