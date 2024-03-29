@@ -40,7 +40,12 @@
       <div *ngFor="let card of river">
         <app-card-on-screen [rank]="card.rank" [suit]="card.suit"></app-card-on-screen>
       </div>
+      <ng-container *ngIf="river.length < 5">
+        <div *ngFor="let emptyCard of emptyCards">
+          <app-card-on-screen></app-card-on-screen>
+        </div>
 
+      </ng-container>
 
     </div>
 

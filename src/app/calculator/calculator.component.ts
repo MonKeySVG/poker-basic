@@ -56,6 +56,10 @@ export class CalculatorComponent {
     this.setHand();
   }
 
+  get emptyCards(): any[] {
+    return new Array(5 - this.river.length);
+  }
+
   preflop(): void {
     if (this.river.length > 0) {
       for (let i = 0; i < this.river.length; i++) {
