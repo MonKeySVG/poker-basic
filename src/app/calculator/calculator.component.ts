@@ -29,7 +29,15 @@ export class CalculatorComponent {
   rankString!: string;
 
   constructor() {
-    this.RandomHandAndRiver();
+    this.randomHandAndRiver();
+  }
+
+  setHand() {
+    this.hand = [this.card_1, this.card_2];
+  }
+
+  randomizeDeck(): void {
+    this.deck = new DeckComponent();
   }
 
   getRandomCard(): CardComponent {
@@ -45,10 +53,24 @@ export class CalculatorComponent {
     this.deck.deck = this.filterDeck(this.deck.deck, this.card_1);
     this.card_2 = this.getRandomCard();
     this.deck.deck = this.filterDeck(this.deck.deck, this.card_2);
+    this.setHand();
   }
 
-  RandomHandAndRiver(): void {
-    this.deck = new DeckComponent();
+  preflop(): void {
+    this.river = [];
+    this.randomizeDeck();
+    this.dealCards();
+    this.rankString = HandRank[this.evaluateHand(this.hand, this.river).handRank];
+  }
+
+  flop(): void {
+    this.generateRiver(this.deck.deck, 3);
+    this.rankString = HandRank[this.evaluateHand(this.hand, this.river).handRank];
+  }
+
+
+  randomHandAndRiver(): void {
+    this.randomizeDeck();
     this.dealCards();
     this.hand = [this.card_1, this.card_2];
 
