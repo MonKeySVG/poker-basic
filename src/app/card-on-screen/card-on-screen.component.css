@@ -1,9 +1,14 @@
 .card {
-  border: 1px solid red;
+  background-image: linear-gradient(to right, #E3E0F2, #F4F2FA);
   display: flex;
   flex-direction: column;
   height: 130px;
   width: 100px;
+  border-radius: 10px;
+}
+
+.card div {
+  padding: 10px;
 }
 
 .upper-container {

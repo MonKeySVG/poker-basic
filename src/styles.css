@@ -1,3 +1,14 @@
+@font-face {
+  font-family: 'SanDiego';
+  src: url(./assets/SanDiego-Light.otf);
+
+}
+
+:root {
+  background-image: radial-gradient(circle at center, rgba(27,24,113,1), rgba(7,7,9,1));
+  font-family: 'SanDiego', sans-serif;
+}
+
 h1 {
   margin: 0;
 }

@@ -1,9 +1,9 @@
 <div class="card">
-  <div class="upper-container">
+  <div class="upper-container" [style.color]="getColor()">
     <h2>{{rank}}</h2>
     <h3>{{suit}}</h3>
   </div>
-  <div class="lower-container">
+  <div class="lower-container" [style.color]="getColor()">
     <h1>{{suit}}</h1>
   </div>
 </div>

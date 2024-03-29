@@ -10,4 +10,19 @@ export class CardOnScreenComponent {
   @Input() rank!: Rank;
   @Input() suit!: Suit;
 
+  getColor() {
+    switch (this.suit) {
+      case Suit.Hearts:
+        return 'red';
+      case Suit.Diamonds:
+        return 'red';
+      case Suit.Clubs:
+        return 'black';
+      case Suit.Spades:
+        return 'black';
+      default:
+        return 'black';
+    }
+  }
+
 }
