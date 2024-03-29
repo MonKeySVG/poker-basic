@@ -68,6 +68,40 @@ export class CalculatorComponent {
     this.rankString = HandRank[this.evaluateHand(this.hand, this.river).handRank];
   }
 
+  turn(): void {
+    if (this.river.length > 3) {
+      if (this.river.length === 4) {
+        let poppedCard = this.river.pop();
+        if (poppedCard) {
+          this.deck.deck.push(poppedCard);
+        }
+      } else {
+        let poppedCard1 = this.river.pop();
+        let poppedCard2 = this.river.pop();
+        if (poppedCard1) {
+          this.deck.deck.push(poppedCard1);
+        }
+        if (poppedCard2) {
+          this.deck.deck.push(poppedCard2);
+        }
+      }
+
+    }
+    this.addCardToRiver(this.deck.deck);
+    this.rankString = HandRank[this.evaluateHand(this.hand, this.river).handRank];
+  }
+
+  riverCard(): void {
+    if (this.river.length > 4) {
+      let poppedCard = this.river.pop();
+      if (poppedCard) {
+        this.deck.deck.push(poppedCard);
+      }
+    }
+    this.addCardToRiver(this.deck.deck);
+    this.rankString = HandRank[this.evaluateHand(this.hand, this.river).handRank];
+  }
+
 
   randomHandAndRiver(): void {
     this.randomizeDeck();
@@ -117,6 +151,12 @@ export class CalculatorComponent {
     }
 
     this.river = river;
+  }
+
+  addCardToRiver(deck: CardComponent[]): void {
+    let randomIndex = Math.floor(Math.random() * deck.length);
+    this.river.push(deck[randomIndex]);
+    deck.splice(randomIndex, 1);
   }
 
   rankToNumber(rank: Rank): number {
