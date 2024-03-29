@@ -71,3 +71,33 @@ p {
    font-size: 1.5rem;
    color: #D04255;
  }
+
+.number-of-players {
+display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+
+.number-of-players .select-container{
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+select {
+  outline: none;
+  text-align: center;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: 12px 32px;
+
+  background-color: #2D2D34;
+  color: #E3E0F2;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 1rem;
+  box-shadow: var(--custom-shadow);
+}

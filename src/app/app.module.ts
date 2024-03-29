@@ -9,6 +9,7 @@ import { DeckComponent } from './deck/deck.component';
 import { CardOnScreenComponent } from './card-on-screen/card-on-screen.component';
 import { FormsModule } from '@angular/forms';
 
+
 @NgModule({
   declarations: [
     AppComponent,

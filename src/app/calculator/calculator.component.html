@@ -10,16 +10,22 @@
 
       </div>
 
-      <div class="number-of-players">
-        <h2>Number of players</h2>
-        <div class="slider-container">
-          <h3>{{numberOfPlayers}}</h3>
-          <input type="range" min="1" max="8" [(ngModel)]="numberOfPlayers" (change)="onSliderChange($event)">
-        </div>
 
-      </div>
 
       <div class="actions">
+        <div class="number-of-players block">
+          <h2>Number of players</h2>
+          <div class="select-container">
+            <select [(ngModel)]="numberOfPlayers" (change)="onSelectChange($event)">
+              <option *ngFor="let number of [2,3,4,5,6,7,8,9,10,11,12]" [value]="number">
+                {{number}}
+              </option>
+            </select>
+
+          </div>
+
+        </div>
+
         <div class="block">
           <button (click)="randomHandAndRiver()">Random Hand and River</button>
         </div>
