@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" [ngClass]="{'uninitialized-card': !areRankAndSuitInitialized()}">
   <div class="upper-container" [style.color]="getColor()">
     <h2>{{rank}}</h2>
     <h3>{{suit}}</h3>

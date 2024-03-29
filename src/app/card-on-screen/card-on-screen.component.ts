@@ -25,4 +25,8 @@ export class CardOnScreenComponent {
     }
   }
 
+  areRankAndSuitInitialized(): boolean {
+    return this.rank !== undefined && this.suit !== undefined;
+  }
+
 }

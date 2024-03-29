@@ -33,3 +33,8 @@
   font-size: 40px;
 }
 
+.uninitialized-card {
+  filter: brightness(0.5);
+  opacity: 0.5;
+}
+
