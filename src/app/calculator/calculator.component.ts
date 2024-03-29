@@ -172,10 +172,38 @@ export class CalculatorComponent {
       }
     });
 
+
+
+    // Version qui prend en compte les combinaisons potentielles avec la rivière
+    // Mais qui est trop longue à calculer
+
+    // this.generatePlayerHand(this.deck.deck).forEach(opponentHand => {
+    //   this.generatePossibleRivers(this.deck.deck).forEach(river => {
+    //     if (this.isHandBetter(ourCards.concat(river), opponentHand.concat(river)) == 1) {
+    //       ahead++;
+    //     } else if (this.isHandBetter(ourCards.concat(river), opponentHand.concat(river)) == 0) {
+    //       tied++;
+    //     } else {
+    //       behind++;
+    //     }
+    //   });
+    //
+    // });
+
+
+
     let odds = (ahead + tied / 2) / (ahead + tied + behind);
     let oddsPowerPlayers = Math.pow(odds, numberOfPlayers);
 
-    return (oddsPowerPlayers).toFixed(2);
+    console.log("Ahead: ", ahead);
+    console.log("Tied: ", tied);
+    console.log("Behind: ", behind);
+    console.log("Odds: ", odds);
+    console.log("Total: ", ahead + tied + behind);
+    console.log("Odds Power Players: ", oddsPowerPlayers);
+
+
+    return (oddsPowerPlayers*100).toFixed(2);
   }
 
   calculatePreFlopOdds(numberOfPlayers: number): void {
