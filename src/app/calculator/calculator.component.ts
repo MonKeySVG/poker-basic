@@ -63,6 +63,7 @@ export class CalculatorComponent {
     this.generateRiver(this.deck.deck, 5);
 
 
+
     this.rankString = HandRank[this.evaluateHand(this.hand, this.river).handRank];
 
   }
@@ -337,26 +338,45 @@ export class CalculatorComponent {
 
   isFlush(hand: CardComponent[], river: CardComponent[]): Rank | null {
     let handWithRiver = hand.concat(river);
-    let foundFlush: CardComponent[] = [];
+    let foundFlush: CardComponent[][] = [];
 
     if (handWithRiver.length < 5) {
       return null;
     } else {
-      let suits = Object.values(Suit);
 
-      for (let suit of suits) {
-        let sameSuitCards = handWithRiver.filter(card => card.suit === suit);
-        if (sameSuitCards.length >= 5) {
-          if (this.containsHandCards(sameSuitCards, hand)) {
-            sameSuitCards.sort((a, b) => this.rankToNumber(a.rank) - this.rankToNumber(b.rank));
-            foundFlush = sameSuitCards;
+      let possibleCombinations = this.getCombinations(handWithRiver, 5);
+
+      for (let combination of possibleCombinations) {
+
+        if (combination[0].suit === combination[1].suit &&
+          combination[0].suit === combination[2].suit &&
+          combination[0].suit === combination[3].suit &&
+          combination[0].suit === combination[4].suit) {
+          if (this.containsHandCards(combination, hand)) {
+            combination.sort((a, b) => this.rankToNumber(a.rank) - this.rankToNumber(b.rank));
+            foundFlush.push(combination);
+
           }
-
         }
+
+
+      // let suits = Object.values(Suit);
+      //
+      // for (let suit of suits) {
+      //   let sameSuitCards = handWithRiver.filter(card => card.suit === suit);
+      //   if (sameSuitCards.length >= 5) {
+      //     if (this.containsHandCards(sameSuitCards, hand)) {
+      //       sameSuitCards.sort((a, b) => this.rankToNumber(a.rank) - this.rankToNumber(b.rank));
+      //       foundFlush = sameSuitCards;
+      //     }
+      //
+      //   }
       }
 
-      if (foundFlush.length >= 5) {
-        let highestCard = foundFlush[foundFlush.length - 1]; // Prend le dernier élément, qui est la carte de rang le plus élevé
+      if (foundFlush.length >= 2) {
+        // Trier les combinaisons de flush par rang de la carte la plus élevée
+        foundFlush.sort((a, b) => this.rankToNumber(a[a.length - 1].rank) - this.rankToNumber(b[b.length - 1].rank));
+        let highestCard = foundFlush[foundFlush.length - 1][(foundFlush[foundFlush.length - 1]).length -1]; // Prend le dernier élément, qui est la carte de rang le plus élevé
         return highestCard.rank;
       }
 
@@ -366,6 +386,7 @@ export class CalculatorComponent {
 
   isStraight(hand: CardComponent[], river: CardComponent[]): Rank | null {
     let handWithRiver = hand.concat(river);
+    let foundStraights: CardComponent[][] = [];
     if (handWithRiver.length < 5) {
       return null;
     } else {
@@ -380,11 +401,17 @@ export class CalculatorComponent {
           if (straightCount === 5) {
             // vérifier si les 5 cartes séléctionnée contienne les cartes de la main
             if (this.containsHandCards(sortedHand.slice(i - 3, i + 2), hand)) {
-              return sortedHand[i + 1].rank;
+              foundStraights.push(sortedHand.slice(i - 3, i + 2));
             }
           }
         } else if (this.rankToNumber(sortedHand[i].rank) !== this.rankToNumber(sortedHand[i + 1].rank)) {
           straightCount = 1;
+        }
+
+        if (foundStraights.length >= 1) {
+          foundStraights.sort((a, b) => this.rankToNumber(a[a.length - 1].rank) - this.rankToNumber(b[b.length - 1].rank));
+          let highestCard = foundStraights[foundStraights.length - 1][foundStraights[foundStraights.length - 1].length - 1];
+          return highestCard.rank;
         }
       }
 

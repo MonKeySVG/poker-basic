@@ -13,15 +13,15 @@ export class CardOnScreenComponent {
   getColor() {
     switch (this.suit) {
       case Suit.Hearts:
-        return 'red';
+        return '#D04255';
       case Suit.Diamonds:
-        return 'red';
+        return '#D04255';
       case Suit.Clubs:
-        return 'black';
+        return '#E3E0F2';
       case Suit.Spades:
-        return 'black';
+        return '#E3E0F2';
       default:
-        return 'black';
+        return '#E3E0F2';
     }
   }
 

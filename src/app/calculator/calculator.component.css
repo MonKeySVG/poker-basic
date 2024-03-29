@@ -8,14 +8,20 @@
   margin-block: 50px;
 }
 
-p {
-  font-size: 1.5rem;
-  color: red;
-}
+
 
 .river, .hand {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 30px;
 }
+
+.best-combination {
+  color: #E3E0F2;
+}
+
+p {
+   font-size: 1.5rem;
+   color: #D04255;
+ }

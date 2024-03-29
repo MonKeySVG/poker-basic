@@ -5,7 +5,8 @@
 }
 
 :root {
-  background-image: radial-gradient(circle at center, rgba(27,24,113,1), rgba(7,7,9,1));
+  /*background-image: radial-gradient(circle at center, rgba(27,24,113,1), rgba(7,7,9,1));*/
+  background-color: #22232A;
   font-family: 'SanDiego', sans-serif;
 }
 
