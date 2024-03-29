@@ -27,7 +27,7 @@ export class CalculatorComponent {
   deck: DeckComponent = new DeckComponent();
   river: CardComponent[] = [];
   rankString!: string;
-  numberOfPlayers: number = 2;
+  numberOfOpponents: number = 2;
 
   constructor() {
     this.randomHandAndRiver();
@@ -694,8 +694,8 @@ export class CalculatorComponent {
   }
 
   onSelectChange(event: any) {
-    this.numberOfPlayers = event.target.value;
-    this.handStrendth(this.hand, this.river, this.numberOfPlayers);
+    this.numberOfOpponents = event.target.value;
+    this.handStrendth(this.hand, this.river, this.numberOfOpponents);
     console.log(event.target.value)
   }
 
