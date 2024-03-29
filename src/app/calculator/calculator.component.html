@@ -16,19 +16,11 @@
 
       <div class="block">
         <button (click)="preflop()">Pre-Flop</button>
-      </div>
-
-      <div class="block">
         <button (click)="flop()">Flop</button>
-      </div>
-
-      <div class="block">
         <button (click)="turn()">Turn</button>
-      </div>
-
-      <div class="block">
         <button (click)="riverCard()">River</button>
       </div>
+
     </div>
 
 
@@ -48,6 +40,8 @@
       <div *ngFor="let card of river">
         <app-card-on-screen [rank]="card.rank" [suit]="card.suit"></app-card-on-screen>
       </div>
+
+
     </div>
 
     <div class="best-combination">
