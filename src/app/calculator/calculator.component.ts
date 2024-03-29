@@ -132,8 +132,12 @@ export class CalculatorComponent {
       if (poppedCard) {
         this.deck.deck.push(poppedCard);
       }
+      this.addCardToRiver(this.deck.deck);
+    } else {
+      while (this.river.length < 5) {
+        this.addCardToRiver(this.deck.deck);
+      }
     }
-    this.addCardToRiver(this.deck.deck);
     this.rankString = HandRank[this.evaluateHand(this.hand, this.river).handRank];
   }
 
