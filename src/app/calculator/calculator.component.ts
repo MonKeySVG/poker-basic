@@ -27,6 +27,7 @@ export class CalculatorComponent {
   deck: DeckComponent = new DeckComponent();
   river: CardComponent[] = [];
   rankString!: string;
+  numberOfPlayers: number = 5;
 
   constructor() {
     this.randomHandAndRiver();
@@ -662,6 +663,12 @@ export class CalculatorComponent {
     } else {
       return rank1.handRank > rank2.handRank ? 1 : -1; // Compare les rangs des mains
     }
+  }
+
+  onSliderChange(event: any) {
+    this.numberOfPlayers = event.target.value;
+    this.handStrendth(this.hand, this.river, this.numberOfPlayers);
+    console.log(event.target.value)
   }
 
 

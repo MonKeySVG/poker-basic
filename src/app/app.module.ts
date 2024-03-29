@@ -7,6 +7,7 @@ import { CalculatorComponent } from './calculator/calculator.component';
 import { CardComponent } from './card/card.component';
 import { DeckComponent } from './deck/deck.component';
 import { CardOnScreenComponent } from './card-on-screen/card-on-screen.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { CardOnScreenComponent } from './card-on-screen/card-on-screen.component
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
