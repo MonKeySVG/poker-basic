@@ -57,18 +57,22 @@ export class CalculatorComponent {
   }
 
   preflop(): void {
-    this.river = [];
-    this.randomizeDeck();
-    this.dealCards();
+    if (this.river.length > 0) {
+      for (let i = 0; i < this.river.length; i++) {
+        this.deck.deck.push(this.river[i]);
+      }
+
+      this.river = [];
+    } else {
+      this.river = [];
+      this.randomizeDeck();
+      this.dealCards();
+    }
     this.rankString = HandRank[this.evaluateHand(this.hand, this.river).handRank];
+
   }
 
   flop(): void {
-    this.generateRiver(this.deck.deck, 3);
-    this.rankString = HandRank[this.evaluateHand(this.hand, this.river).handRank];
-  }
-
-  turn(): void {
     if (this.river.length > 3) {
       if (this.river.length === 4) {
         let poppedCard = this.river.pop();
@@ -85,9 +89,36 @@ export class CalculatorComponent {
           this.deck.deck.push(poppedCard2);
         }
       }
+    } else {
+      this.generateRiver(this.deck.deck, 3);
 
     }
-    this.addCardToRiver(this.deck.deck);
+    this.rankString = HandRank[this.evaluateHand(this.hand, this.river).handRank];
+
+
+  }
+
+  turn(): void {
+    if (this.river.length > 4) {
+      let poppedCard = this.river.pop();
+      if (poppedCard) {
+        this.deck.deck.push(poppedCard);
+      }
+    }
+
+    else if (this.river.length == 4){
+      let poppedCard = this.river.pop();
+      if (poppedCard) {
+        this.deck.deck.push(poppedCard);
+      }
+      this.addCardToRiver(this.deck.deck);
+    } else {
+      while (this.river.length < 4) {
+        this.addCardToRiver(this.deck.deck);
+      }
+
+    }
+
     this.rankString = HandRank[this.evaluateHand(this.hand, this.river).handRank];
   }
 
