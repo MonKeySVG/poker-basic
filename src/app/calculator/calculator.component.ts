@@ -42,18 +42,15 @@ export class CalculatorComponent {
   }
 
   getRandomCard(): CardComponent {
-    const ranks = Object.values(Rank);
-    const suits = Object.values(Suit);
-    const randomRank = ranks[Math.floor(Math.random() * ranks.length)];
-    const randomSuit = suits[Math.floor(Math.random() * suits.length)];
-    return new CardComponent(randomRank, randomSuit);
+    const randomIndex = Math.floor(Math.random() * this.deck.deck.length);
+    const randomCard = this.deck.deck[randomIndex];
+    this.deck.deck = this.filterDeck(this.deck.deck, randomCard);
+    return randomCard;
   }
 
   dealCards(): void {
     this.card_1 = this.getRandomCard();
-    this.deck.deck = this.filterDeck(this.deck.deck, this.card_1);
     this.card_2 = this.getRandomCard();
-    this.deck.deck = this.filterDeck(this.deck.deck, this.card_2);
     this.setHand();
   }
 
@@ -387,7 +384,6 @@ export class CalculatorComponent {
     if (handWithRiver.length < 5) {
       return null;
     } else {
-      // TODO: Implement this function
       // Vérifiez si la main contient un 10, un Valet, une Reine, un Roi et un As de la même couleur
       let possibleCombinations = this.getCombinations(handWithRiver, 5);
 
@@ -417,15 +413,17 @@ export class CalculatorComponent {
     }
   }
 
+
+  // TODO: Corriger cette fonction (normalement c'est bon)
   isStraightFlush(hand: CardComponent[], river: CardComponent[]): Rank | null {
     let handWithRiver = hand.concat(river);
     if (handWithRiver.length < 5) {
       return null;
     } else {
-      let possibleCombinations = this.getCombinations(handWithRiver, 5);
+      let possibleCombinations = this.getCombinations(river, 3);
 
       for (let combination of possibleCombinations) {
-        if (this.isStraight(hand, combination) && this.isFlush(hand, combination)) {
+        if (this.isStraight(hand, river) && this.isFlush(hand, river)) {
           combination.sort((a, b) => this.rankToNumber(a.rank) - this.rankToNumber(b.rank));
           let highestCard = combination[combination.length - 1]; // Prend le dernier élément, qui est la carte de rang le plus élevé
           return highestCard.rank;
