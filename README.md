@@ -13,7 +13,7 @@ Poker Stats est une application web qui permet aux utilisateurs de calculer les 
 
 ## Installation
 
-1. Clonez ce dépôt sur votre machine locale.
+1. Clonez ce dépôt sur votre machine.
 2. Naviguez jusqu'au répertoire du projet.
 3. Exécutez `npm install` pour installer les dépendances.
 4. Exécutez `ng serve` pour démarrer le serveur de développement.
